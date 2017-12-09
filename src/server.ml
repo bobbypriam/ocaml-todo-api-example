@@ -12,15 +12,15 @@ let todos_list =
 
 let todos_add =
   post "/todos" (fun req ->
-    let promise = req |> App.json_of_body_exn in
-    Lwt.bind promise (fun json ->
-        let open Ezjsonm in
-        let json_value = value json in
-        let content = get_string (find json_value ["content"]) in
-        let%lwt () = Todos.add (Todos.todo_of_string content) in
-        `Json (dict [ ("ok", bool true) ]) |> respond'
-      )
-  )
+      let promise = req |> App.json_of_body_exn in
+      Lwt.bind promise (fun json ->
+          let open Ezjsonm in
+          let json_value = value json in
+          let content = get_string (find json_value ["content"]) in
+          let%lwt () = Todos.add (Todos.todo_of_string content) in
+          `Json (dict [ ("ok", bool true) ]) |> respond'
+        )
+    )
 
 let start () =
   App.empty
