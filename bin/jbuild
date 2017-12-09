@@ -1,0 +1,7 @@
+(jbuild_version 1)
+
+(executables
+  ((names (main migrate))
+   (public_names (tododb tododb_migrate))
+   (libraries (app))
+   (preprocess (pps (lwt.ppx)))))

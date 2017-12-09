@@ -1,0 +1,20 @@
+opam-version: "2.0"
+maintainer:   "bobby.priambodo@gmail.com"
+authors:      "Bobby Priambodo"
+homepage:     "https://github.com/bobbypriambodo/tododb-ocaml/"
+bug-reports:  "https://github.com/bobbypriambodo/tododb-ocaml/issues"
+dev-repo:     "git+https://github.com/bobbypriambodo/tododb-ocaml.git"
+license:      "MIT"
+
+build: [
+  ["jbuilder" "subst" "-n" name] {pinned}
+  ["jbuilder" "build" "-p" name "-j" jobs]
+]
+run-test: [["jbuilder" "runtest" "-p" name "-j" jobs]]
+
+depends: [
+  "ocaml" { >= "4.04.2" }
+  "jbuilder" {build}
+  "opium"
+  "alcotest" {test}
+]

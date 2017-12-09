@@ -1,0 +1,6 @@
+(jbuild_version 1)
+
+(library
+  ((name app) (wrapped false)
+  (libraries (opium lwt lwt.unix ezpostgresql))
+  (preprocess (pps (lwt.ppx)))))
