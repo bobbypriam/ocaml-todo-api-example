@@ -1,8 +1,8 @@
-all:
-	jbuilder build @install
+build:
+	jbuilder build @install --dev
 
-run: all
+run: build
 	jbuilder exec tododb
 
-migrate: all
+migrate: build
 	jbuilder exec tododb_migrate
