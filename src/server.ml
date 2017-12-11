@@ -8,8 +8,8 @@ let todos_list =
       let%lwt todos = Todos.get_all () in
       let result_json =
         list (fun (todo : Todos.todo) ->
-          dict [("id", int todo.id); ("content", string todo.content)]
-        ) todos in
+            dict [("id", int todo.id); ("content", string todo.content)]
+          ) todos in
       `Json result_json |> respond'
     )
 
