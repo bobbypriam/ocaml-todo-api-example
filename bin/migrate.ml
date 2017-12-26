@@ -1,9 +1,10 @@
 open Ezpostgresql
 
 let migrate () =
-  print_endline "creating todo table." ;
-  let%lwt conn = connect ~conninfo:(Config.db_connection_url) () in
-  let%lwt () =
+  let _ =
+    let open Lwt_result.Infix in
+    print_endline "creating todo table." ;
+    connect ~conninfo:(Config.db_connection_url) () >>= fun conn ->
     command
       ~query:"
         CREATE TABLE IF NOT EXISTS todos (
@@ -11,8 +12,10 @@ let migrate () =
           content VARCHAR
         )
       "
-      conn in
-  finish conn
+      conn >>= fun () ->
+    finish conn
+  in
+  Lwt.return_unit
 
 
 let () = Lwt_main.run (migrate ())

@@ -3,10 +3,13 @@ type todo = {
   content: string;
 }
 
-val get_all : unit -> todo list Lwt.t
+type error =
+  | Database_error
 
-val add : string -> unit Lwt.t
+val get_all : unit -> (todo list, error) result Lwt.t
 
-val remove : int -> unit Lwt.t
+val add : string -> (unit, error) result Lwt.t
 
-val clear : unit -> unit Lwt.t
+val remove : int -> (unit, error) result Lwt.t
+
+val clear : unit -> (unit, error) result Lwt.t

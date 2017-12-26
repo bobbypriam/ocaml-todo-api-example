@@ -5,12 +5,15 @@ let index_page = get "/" (fun _req -> `String "Hello TodoDB\n" |> respond')
 let todos_list =
   get "/todos" (fun _req ->
       let open Ezjsonm in
-      let%lwt todos = Todos.get_all () in
-      let result_json =
-        list (fun (todo : Todos.todo) ->
-            dict [("id", int todo.id); ("content", string todo.content)]
-          ) todos in
-      `Json result_json |> respond'
+      match%lwt Todos.get_all () with
+      | Ok todos ->
+        let result_json =
+          list (fun (todo : Todos.todo) ->
+              dict [("id", int todo.id); ("content", string todo.content)]
+            ) todos in
+        `Json result_json |> respond'
+      | Error Todos.Database_error ->
+        `Json (dict [("error", string "Database error.")]) |> respond'
     )
 
 let todos_add =
@@ -20,8 +23,11 @@ let todos_add =
           let open Ezjsonm in
           let json_value = value json in
           let content = get_string (find json_value ["content"]) in
-          let%lwt () = Todos.add content in
-          `Json (dict [ ("ok", bool true) ]) |> respond'
+          match%lwt Todos.add content with
+          | Ok () ->
+            `Json (dict [ ("ok", bool true) ]) |> respond'
+          | Error Todos.Database_error ->
+            `Json (dict [("error", string "Database error.")]) |> respond'
         )
     )
 
