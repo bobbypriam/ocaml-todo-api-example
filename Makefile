@@ -6,3 +6,6 @@ run: build
 
 migrate: build
 	jbuilder exec tododb_migrate
+
+clean:
+	jbuilder clean
