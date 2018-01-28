@@ -16,5 +16,5 @@ depends: [
   "ocaml" { >= "4.04.2" }
   "jbuilder" {build}
   "opium"
-  "alcotest" {test}
+  "alcotest" {with-test}
 ]
