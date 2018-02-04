@@ -7,11 +7,9 @@ module Handlers (Todos : module type of Todos) = struct
   let todos_list_handler () =
     match%lwt Todos.get_all () with
     | Ok todos ->
-      let result_json =
-        list (fun (todo : Todos.todo) ->
-            dict [("id", int todo.id); ("content", string todo.content)]
-          ) todos in
-      Lwt.return @@ `Json result_json
+      Lwt.return @@ `Json (list (fun (todo : Todos.todo) ->
+          dict [("id", int todo.id); ("content", string todo.content)]
+        ) todos)
     | Error Todos.Database_error ->
       Lwt.return @@ `Json (dict [("error", string "Database error.")])
 
