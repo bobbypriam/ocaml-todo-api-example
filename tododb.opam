@@ -16,5 +16,9 @@ depends: [
   "ocaml" { >= "4.04.2" }
   "jbuilder" {build}
   "opium"
+  "caqti"
+  "caqti-lwt"
+  "caqti-dynload"
+  "caqti-driver-postgresql"
   "alcotest" {with-test}
 ]
