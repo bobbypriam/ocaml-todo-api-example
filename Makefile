@@ -1,11 +1,11 @@
 build:
 	jbuilder build @install --dev
 
-run: build
-	jbuilder exec tododb
+run:
+	jbuilder exec tododb --dev
 
-migrate: build
-	jbuilder exec tododb_migrate
+migrate:
+	jbuilder exec tododb_migrate --dev
 
 clean:
 	jbuilder clean
