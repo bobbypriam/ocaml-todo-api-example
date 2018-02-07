@@ -1,7 +1,7 @@
 open Opium.Std
 open Lwt.Infix
 
-module Handlers (Todos : module type of Todos) = struct
+module Handlers (Todos : Todos.S) = struct
   open Ezjsonm
 
   let todos_list_handler () =
@@ -25,17 +25,18 @@ module Handlers (Todos : module type of Todos) = struct
       )
 end
 
-module H = Handlers(Todos)
-
-let index_route = get "/" (fun _req -> `String "Hello TodoDB\n" |> respond')
-
-let todos_list_route =
-  get "/todos" (fun _req -> H.todos_list_handler () >>= respond')
-
-let todos_add_route =
-  post "/todos" (fun req -> H.todos_add_handler req >>= respond')
-
 let start () =
+  let module T = Todos.Make(Db) in
+  let module H = Handlers(T) in
+
+  let index_route = get "/" (fun _req -> `String "Hello TodoDB\n" |> respond') in
+
+  let todos_list_route =
+    get "/todos" (fun _req -> H.todos_list_handler () >>= respond') in
+
+  let todos_add_route =
+    post "/todos" (fun req -> H.todos_add_handler req >>= respond') in
+
   App.empty
   |> index_route
   |> todos_list_route
