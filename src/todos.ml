@@ -7,6 +7,10 @@ module type S = sig
   type error =
     | Database_error
 
+  val migrate : unit -> (unit, error) result Lwt.t
+
+  val rollback : unit -> (unit, error) result Lwt.t
+
   val get_all : unit -> (todo list, error) result Lwt.t
 
   val add : string -> (unit, error) result Lwt.t
@@ -28,6 +32,21 @@ module Make (Db : module type of Db) = struct
     | Database_error
 
   module Q = struct
+    let create_todos_table =
+      Caqti_request.exec
+        Caqti_type.unit
+        {|
+          CREATE TABLE todos (
+            id SERIAL NOT NULL PRIMARY KEY,
+            content VARCHAR
+          )
+        |}
+
+    let drop_todos_table =
+      Caqti_request.exec
+        Caqti_type.unit
+        "DROP TABLE todos"
+
     let get_all_todos =
       Caqti_request.collect
         Caqti_type.unit
@@ -49,6 +68,24 @@ module Make (Db : module type of Db) = struct
         Caqti_type.unit
         "DELETE FROM todos"
   end
+
+  let migrate_internal (module Db : Caqti_lwt.CONNECTION) =
+    Db.exec Q.create_todos_table ()
+
+  let migrate () =
+    let%lwt result = Caqti_lwt.Pool.use migrate_internal pool in
+    match result with
+    | Ok () -> Ok () |> Lwt.return
+    | Error _e -> Error Database_error |> Lwt.return
+
+  let rollback_internal (module Db : Caqti_lwt.CONNECTION) =
+    Db.exec Q.drop_todos_table ()
+
+  let rollback () =
+    let%lwt result = Caqti_lwt.Pool.use rollback_internal pool in
+    match result with
+    | Ok () -> Ok () |> Lwt.return
+    | Error _e -> Error Database_error |> Lwt.return
 
   let get_all_internal (module Db : Caqti_lwt.CONNECTION) =
     Db.fold Q.get_all_todos (fun (id, content) acc ->

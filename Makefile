@@ -7,5 +7,8 @@ run:
 migrate:
 	jbuilder exec tododb_migrate --dev
 
+rollback:
+	jbuilder exec tododb_rollback --dev
+
 clean:
 	jbuilder clean

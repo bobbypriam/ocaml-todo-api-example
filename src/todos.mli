@@ -7,6 +7,10 @@ module type S = sig
   type error =
     | Database_error
 
+  val migrate : unit -> (unit, error) result Lwt.t
+
+  val rollback : unit -> (unit, error) result Lwt.t
+
   val get_all : unit -> (todo list, error) result Lwt.t
 
   val add : string -> (unit, error) result Lwt.t
