@@ -18,7 +18,6 @@ depends: [
   "opium"
   "caqti"
   "caqti-lwt"
-  "caqti-dynload"
   "caqti-driver-postgresql"
   "alcotest" {with-test}
 ]

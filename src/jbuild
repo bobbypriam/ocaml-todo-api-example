@@ -5,5 +5,5 @@
    (wrapped false)
    (libraries
      (opium lwt lwt.unix
-      caqti caqti-dynload caqti-lwt))
+      caqti caqti-driver-postgresql caqti-lwt))
    (preprocess (pps (lwt.ppx)))))
