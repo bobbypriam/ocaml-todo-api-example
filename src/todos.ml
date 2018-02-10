@@ -89,8 +89,8 @@ module Make (Db : module type of Db) = struct
 
   let get_all_internal (module Db : Caqti_lwt.CONNECTION) =
     Db.fold Q.get_all_todos (fun (id, content) acc ->
-      { id = id; content = content } :: acc
-    ) () []
+        { id = id; content = content } :: acc
+      ) () []
 
   let get_all () =
     let%lwt todo_result = Caqti_lwt.Pool.use get_all_internal pool in
